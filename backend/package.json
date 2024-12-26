@@ -1,5 +1,5 @@
 {
-  "name": "my-mern-app",
+  "name": "backend",
   "version": "1.0.0",
   "description": "A full stack MERN application with MongoDB Atlas connection.",
   "main": "src/app.js",
