@@ -12,7 +12,6 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { authenticate } from "@/lib/auth";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -20,24 +19,29 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleLogin = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
     setError("");
 
-    const result = await authenticate(username, password);
-    if (result) {
-      router.push(`/dashboard?userType=${result.userType}`);
+    if (username === "admin" && password === "admin123") {
+      router.push("/dashboard?userType=admin");
+    } else if (username === "szborok" && password === "Kawl3377") {
+      router.push("/dashboard?userType=worker");
     } else {
       setError("Invalid username or password");
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-background relative">
-      <Card className="w-[350px]">
+    <div className="flex items-center justify-center min-h-screen subtle-gradient">
+      <Card className="w-[350px] bg-card/90 backdrop-blur-sm">
         <CardHeader>
-          <CardTitle>CNC Tool Planner</CardTitle>
-          <CardDescription>Login to access your dashboard</CardDescription>
+          <CardTitle className="text-2xl font-semibold text-center">
+            CNC Tool Planner
+          </CardTitle>
+          <CardDescription className="text-center">
+            Login to access your dashboard
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin}>
@@ -48,6 +52,7 @@ export default function LoginPage() {
                   placeholder="Username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
+                  className="bg-input/70"
                 />
               </div>
               <div className="flex flex-col space-y-1.5">
@@ -57,20 +62,26 @@ export default function LoginPage() {
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  className="bg-input/70"
                 />
               </div>
             </div>
           </form>
-          {error && <p className="text-red-500 mt-2">{error}</p>}
+          {error && (
+            <p className="text-destructive mt-2 text-center text-sm">{error}</p>
+          )}
         </CardContent>
         <CardFooter>
-          <Button className="w-full" onClick={handleLogin}>
+          <Button
+            className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+            onClick={handleLogin}
+          >
             Login
           </Button>
         </CardFooter>
       </Card>
-      <div className="absolute bottom-4 text-center w-full text-muted-foreground">
-        <p>Powered by BRK Solutions</p>
+      <div className="absolute bottom-4 text-center w-full text-muted-foreground text-sm">
+        Powered by BRK Solutions
       </div>
     </div>
   );

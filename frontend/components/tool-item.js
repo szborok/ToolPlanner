@@ -1,8 +1,8 @@
 import Image from "next/image";
-import { Badge } from "@/components/ui/badge.jsx";
-import { Progress } from "@/components/ui/progress.jsx";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
-import { Circle } from "lucide-react";
+import { Circle, ImageIcon } from "lucide-react";
 
 export function ToolItem({
   toolCode,
@@ -27,12 +27,12 @@ export function ToolItem({
     }
   };
 
-  const getLifeColor = (percentage) => {
+  const getHealthColor = (percentage) => {
     const greenThreshold = parseInt(
-      process.env.NEXT_PUBLIC_TOOL_LIFE_GREEN_THRESHOLD || "60"
+      process.env.NEXT_PUBLIC_TOOL_HEALTH_GREEN_THRESHOLD || "60"
     );
     const yellowThreshold = parseInt(
-      process.env.NEXT_PUBLIC_TOOL_LIFE_YELLOW_THRESHOLD || "80"
+      process.env.NEXT_PUBLIC_TOOL_HEALTH_YELLOW_THRESHOLD || "80"
     );
 
     if (percentage <= greenThreshold) return "bg-green-500";
@@ -41,38 +41,46 @@ export function ToolItem({
   };
 
   return (
-    <div className="flex items-center gap-4 p-4 hover:bg-muted/50 rounded-lg cursor-pointer">
-      <div className="flex-1 grid gap-1">
+    <div className="flex items-center gap-6 p-4 hover:bg-muted/50 rounded-lg transition-colors">
+      <div className="flex-[2] grid gap-2">
         <div className="flex items-center gap-2">
-          <span className="font-medium">{toolCode}</span>
-          <Badge variant="secondary" className={cn(getStatusColor(status))}>
+          <span className="font-medium text-lg">{toolCode}</span>
+          <Badge
+            variant="secondary"
+            className={cn("capitalize", getStatusColor(status))}
+          >
             {status}
           </Badge>
         </div>
-        <div className="text-sm text-muted-foreground flex items-center">
-          <Circle className="h-4 w-4 mr-1" />
+        <div className="text-sm text-muted-foreground flex items-center gap-2">
+          <Circle className="h-3 w-3" />
           <span>{diameter.toFixed(1)}mm</span>
-          <span className="ml-2">{toolTypeCode}</span>
+          <span>{toolTypeCode}</span>
         </div>
       </div>
-      <div className="flex-1">
-        <div className="flex items-center gap-2">
+      <div className="flex-[2]">
+        <div className="flex items-center gap-3">
           <Progress
             value={lifePercentage}
-            className="h-2"
-            indicatorClassName={getLifeColor(lifePercentage)}
+            className="h-3 flex-1"
+            indicatorClassName={getHealthColor(lifePercentage)}
           />
-          <span className="text-sm font-medium">{lifePercentage}%</span>
+          <span className="text-sm font-medium whitespace-nowrap">
+            Health: {lifePercentage}%
+          </span>
         </div>
       </div>
-      <div className="w-24 h-16 relative">
-        <Image
-          src={imageSrc}
-          alt={`${toolCode} image`}
-          layout="fill"
-          objectFit="cover"
-          className="rounded-md"
-        />
+      <div className="w-32 h-20 relative shrink-0 bg-muted/50 rounded-md overflow-hidden mr-4 flex items-center justify-center">
+        <div className="w-28 h-18 relative">
+          <Image
+            src={imageSrc}
+            alt={`${toolCode} image`}
+            width={112}
+            height={72}
+            className="object-contain"
+            loading="lazy"
+          />
+        </div>
       </div>
     </div>
   );
